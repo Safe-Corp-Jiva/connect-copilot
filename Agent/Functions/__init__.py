@@ -1,8 +1,7 @@
-from .search import tavily_tool
+import os
 
-# TODO: Add moreeee functions. Some ideas...
-# Emulate a booking service
-# Email lambdas
-# Query the CRM
+tools = []
 
-tools = [tavily_tool]
+if not os.environ.get('DEV') or not os.environ.get('PRODUCTION'):
+  from .sample import multiply
+  tools.append(multiply)
