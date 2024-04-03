@@ -1,0 +1,27 @@
+# Static
+LICENSE
+README.md
+
+# Git
+.git/
+.gitignore
+.gitmodules
+
+# Env
+.venv/
+dev/
+.env
+
+# Python 
+**__pycache__/
+
+# Samples
+**sample.py
+**samples/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+compose.yml
+dev.dockerfile
