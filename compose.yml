@@ -4,6 +4,6 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - .:/var/task
+      - .:/var/task:ro
     env_file:
       - .env

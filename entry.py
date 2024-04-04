@@ -1,6 +1,10 @@
-from Agent import archie
+from typing import Any, Dict
 
-def handler(event, _context):
+from Agent import archie
+from definitions import LambdaContext
+
+
+def handler(event: Dict[str, Any], _context: LambdaContext) -> Dict[str, Any]:
   msg = event.get("input")
   if not msg:
     return {
@@ -8,10 +12,8 @@ def handler(event, _context):
       "body": "Bad request"
     }
   
-  chat_history = event.get("chat_history")
-  if not chat_history:
-    chat_history = []
-  
+  chat_history = event.get("chat_history", [])
+
   return {
     "statusCode": 200,
     "body": archie.run(msg, chat_history)
