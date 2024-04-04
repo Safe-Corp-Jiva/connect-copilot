@@ -13,11 +13,11 @@ dev/
 .env
 
 # Python 
-**__pycache__/
+**/*__pycache__/
 
 # Samples
-**sample.py
-**samples/
+**/*sample.py
+**/*samples/
 
 # Docker
 .dockerignore
@@ -25,3 +25,13 @@ Dockerfile
 docker-compose.yml
 compose.yml
 dev.dockerfile
+
+# IDE
+**/*.idea/
+**/*.vscode/
+
+# Make
+Makefile
+
+# Server (Not used in AWS Lambda)
+server.py

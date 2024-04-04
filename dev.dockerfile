@@ -1,10 +1,10 @@
-FROM python:3.10-bullseye
+FROM public.ecr.aws/lambda/python:3.10
 
 ENV DEV true
 
-WORKDIR /app
-COPY requirements.txt .
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+COPY . ${LAMBDA_TASK_ROOT}
+
+CMD ["entry.handler"]
