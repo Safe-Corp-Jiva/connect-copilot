@@ -18,6 +18,7 @@ Dockerfile
 docker-compose.yml
 compose.yml
 dev.dockerfile
+lambda/
 
 # IDE
 **/*.idea/
