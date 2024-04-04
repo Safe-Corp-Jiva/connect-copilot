@@ -28,7 +28,6 @@ class CustomCalculatorTool(BaseTool):
     b: int,
     run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
   ) -> str:
-    """Use the tool asynchronously."""
-    raise NotImplementedError("Calculator does not support async")
+    return a * b
 
 multiply = CustomCalculatorTool()

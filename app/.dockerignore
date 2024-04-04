@@ -1,16 +1,9 @@
-# Static
-LICENSE
-README.md
-
-# Git
-.git/
-.gitignore
-.gitmodules
-
 # Env
 .venv/
 dev/
+.dev/
 .env
+.env.sample
 
 # Python 
 **/*__pycache__/
@@ -32,6 +25,3 @@ dev.dockerfile
 
 # Make
 Makefile
-
-# Server (Not used in AWS Lambda)
-server.py

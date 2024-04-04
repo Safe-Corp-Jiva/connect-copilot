@@ -1,0 +1,27 @@
+# Env
+.venv/
+dev/
+.dev/
+.env
+.env.sample
+
+# Python 
+**/*__pycache__/
+
+# Samples
+**/*sample.py
+**/*samples/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+compose.yml
+dev.dockerfile
+
+# IDE
+**/*.idea/
+**/*.vscode/
+
+# Make
+Makefile

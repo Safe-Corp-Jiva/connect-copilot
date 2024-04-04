@@ -1,7 +1,8 @@
-import os
+import json
 from typing import Any, Dict, List
 
 from langchain.agents import AgentExecutor, create_structured_chat_agent
+from langchain.agents.agent_iterator import AgentExecutorIterator
 from langchain.tools import BaseTool
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import BaseMessage
@@ -16,19 +17,35 @@ class TravelAgent:
     self.agent = create_structured_chat_agent(
       llm=llm,
       tools=tools,
-      prompt=prompt
+      prompt=prompt,
     )
 
     self.agent_executor = AgentExecutor.from_agent_and_tools(
       agent=self.agent,
       tools=tools,
-      verbose=bool(os.environ.get("DEV"))
+      verbose=False,
+      handle_parsing_errors=True
     )
 
   def run(self, input: str, chat_history: List[BaseMessage]) -> Dict[str, Any]:
-    result = self.agent_executor.invoke(input={
+    return self.agent_executor.invoke(input={
       "input": input,
       "chat_history": chat_history
     })
 
-    return result["output"]
+  async def astream(self, input: str, chat_history: List[BaseMessage]):
+    raise NotImplementedError()
+
+    # Not streaming (waits for full output) ¯\_(°_°)_/¯
+    iterator = AgentExecutorIterator(
+      self.agent_executor,
+      { "input": input,
+        "chat_history": chat_history},
+      yield_actions=False,
+    )
+    
+    async for chunk in iterator:
+      if "output" in chunk:
+        yield json.dumps({"output": chunk["output"]})
+
+    # Neither does self.agent_executor.astream (maybe its Bedrock...)

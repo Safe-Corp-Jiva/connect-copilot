@@ -1,0 +1,7 @@
+{
+  "input": "What was my previous message?",
+  "chat_history": [
+      {"role": "user", "content": "Who are you?"},
+      {"role": "ai", "content": "I am an AI assistant created by Anthropic to be helpful, harmless, and honest."}
+  ]
+}
