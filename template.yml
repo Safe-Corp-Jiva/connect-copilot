@@ -1,28 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Bedrock Agent with Tools API built with Langchain and FastAPI on AWS Lambda
+  Streaming Bedrock Response with FastAPI on AWS Lambda
 
 Globals:
   Function:
     Timeout: 300
-
+  
 Parameters:
-  AWS_DEFAULT_REGION:
+  OpenAIApiKey:
     Type: String
-    Description: "AWS Default Region"
-  AWS_ACCESS_KEY_ID:
+    Description: OpenAI API Key
+  PineconeApiKey:
     Type: String
-    Description: "AWS Access Key ID"
-  AWS_SECRET_ACCESS_KEY:
-    Type: String
-    Description: "AWS Secret Access Key"
-  OPENAI_API_KEY:
-    Type: String
-    Description: "OpenAI API Key"
-  PINECONE_API_KEY:
-    Type: String
-    Description: "Pinecone API Key"
+    Description: Pinecone API Key
 
 Resources:
   FastAPIFunction:
@@ -30,18 +21,14 @@ Resources:
     Properties:
       PackageType: Image
       MemorySize: 512
-      Events:
-        ApiEvents:
-          Type: HttpApi
       Environment:
         Variables:
-          AWS_DEFAULT_REGION: !Ref AWS_DEFAULT_REGION
-          AWS_ACCESS_KEY_ID: !Ref AWS_ACCESS_KEY_ID
-          AWS_SECRET_ACCESS_KEY: !Ref AWS_SECRET_ACCESS_KEY
-          OPENAI_API_KEY: !Ref OPENAI_API_KEY
-          PINECONE_API_KEY: !Ref PINECONE_API_KEY
-          RUST_BACKTRACE: 1
-          PORT: 8538
+          AWS_LWA_INVOKE_MODE: RESPONSE_STREAM
+          OPENAI_API_KEY: !Ref OpenAIApiKey
+          PINECONE_API_KEY: !Ref PineconeApiKey
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: RESPONSE_STREAM
       Policies:
       - Statement:
         - Sid: BedrockInvokePolicy
@@ -49,18 +36,18 @@ Resources:
           Action:
           - bedrock:InvokeModelWithResponseStream
           Resource: '*'
+      Tracing: Active
+      Events:
+        ApiEvent:
+          Type: HttpApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./app
-      DockerTag: python3.10-v1
-
+      DockerTag: v1
 Outputs:
-  FastAPIURL:
-    Description: "API Gateway endpoint URL for Prod stage for FastAPI function"
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
+  FastAPIFunctionUrl:
+    Description: "Function URL for FastAPI function"
+    Value: !GetAtt FastAPIFunctionUrl.FunctionUrl
   FastAPIFunction:
     Description: "FastAPI Lambda Function ARN"
     Value: !GetAtt FastAPIFunction.Arn
-  FastAPIIamRole:
-    Description: "Implicit IAM Role created for FastAPI function"
-    Value: !GetAtt FastAPIFunctionRole.Arn
