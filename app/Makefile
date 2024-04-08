@@ -1,7 +1,7 @@
 all: dev
 
 dev-build: dev.dockerfile
-	docker build -t connect/copilot -f dev.dockerfile .
+	docker build -t stream/copilot -f dev.dockerfile .
 
 dev: dev-build
 	docker compose up -d
