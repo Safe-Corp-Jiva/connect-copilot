@@ -1,33 +1,45 @@
-from typing import Optional, Type
+from functools import reduce
+from typing import Any, List
 
-from langchain.callbacks.manager import (AsyncCallbackManagerForToolRun,
-                                         CallbackManagerForToolRun)
-from langchain.tools import BaseTool
+from langchain.tools import StructuredTool
 from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_core.tools import ToolException
 
 
-class CalculatorInput(BaseModel):
-  a: int = Field(description="first number")
-  b: int = Field(description="second number")
+class MultiplicationInput(BaseModel):
+  """Input for the multiplication tool, you need to provide the numbers separetly"""
+  nums: Any = Field(description="A list of numbers to multiply.")
 
-class CustomCalculatorTool(BaseTool):
-  name = "Calculator"
-  description = "Useful for when you need to answer questions about math"
-  args_schema: Type[BaseModel] = CalculatorInput
-  return_direct: bool = True
+def _multiplication(nums: str | List[float | int]):
+  """Multiplies a list (or pair) of numbers together."""
+  if not isinstance(nums, list):
+    nums = nums.strip('][').split(',')
+  
+  def handler(acc, val):
+    try:
+      val = float(val)
+    except ValueError:
+      try:
+        val = float(val.replace("'", "").replace('"', ''))
+      except ValueError:
+        return acc
+    
+    return acc * float(val)
 
-  def _run(
-    self, a: int, b: int, run_manager: Optional[CallbackManagerForToolRun] = None
-  ) -> str:
-    """Use the tool."""
-    return a * b
+  return f"{reduce(handler, nums, 1.0)}\n"
 
-  async def _arun(
-    self,
-    a: int,
-    b: int,
-    run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
-  ) -> str:
-    return a * b
+def _handle_error(error: ToolException) -> str:
+  return (f"""
+  The following errors occurred during tool execution:
+  {error.args[0]}
+  Please use an appropriate input and try again.""")
 
-multiply = CustomCalculatorTool()
+# EXPORTS
+multiply = StructuredTool.from_function(
+  func=_multiplication,
+  name="Multiply",
+  description="Multiplies a list (or pair) of numbers together.",
+  args_schema=MultiplicationInput,
+  return_direct=True,
+  handle_tool_error=_handle_error,
+)

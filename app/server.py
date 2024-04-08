@@ -17,16 +17,22 @@ class ChatRequest(BaseModel):
                                 title="Chat History", 
                                 description="The chat history for Archie.")]
 
-@app.post("/", response_class=ORJSONResponse)
+@app.get("/", response_class=ORJSONResponse)
+def health():
+  return ORJSONResponse({"status": "ok"})
+
+@app.post("/api/chat")
 async def chat(req: ChatRequest):
-  return ORJSONResponse({
-    "message": archie.run(
+  return StreamingResponse(
+    archie.astream(
       input=req.input,
-      chat_history=req.chat_history)})
+      chat_history=req.chat_history),
+    media_type="application/json")
 
 if __name__ == "__main__":
   uvicorn.run(
     app,
     host="0.0.0.0",
-    port=int(os.environ.get("PORT", "8080"))
+    port=int(os.environ.get("PORT", "8080")),
+    log_level="debug"
   )
