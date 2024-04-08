@@ -1,4 +1,5 @@
 # Env
+venv/
 .venv/
 dev/
 .dev/
@@ -18,7 +19,6 @@ Dockerfile
 docker-compose.yml
 compose.yml
 dev.dockerfile
-lambda/
 
 # IDE
 **/*.idea/
