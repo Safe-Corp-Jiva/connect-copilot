@@ -1,13 +1,16 @@
-from langchain_community.chat_models import BedrockChat
+from langchain.agents import create_openai_tools_agent
+from langchain_openai import ChatOpenAI
 
 from .Execution.chat import TravelAgent
 from .Functions import tools
 from .Templates.proompt import prompt
 
-llm = BedrockChat(
-  model_id="anthropic.claude-3-sonnet-20240229-v1:0",
-  model_kwargs={"temperature": 0.1},
+_llm = ChatOpenAI(
+  model="gpt-3.5-turbo-1106", 
+  temperature=0.025,
   streaming=True
 )
 
-archie = TravelAgent(prompt, llm, tools)
+_agent = create_openai_tools_agent(_llm, tools, prompt)
+
+archie = TravelAgent(_agent, tools)

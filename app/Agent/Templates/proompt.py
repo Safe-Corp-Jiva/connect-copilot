@@ -1,27 +1,20 @@
 # TODO: Push prompt template to LangSmith hub and pull it at runtime
+from datetime import date
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-system = '''Answer the following questions as best you can. You have access to the following tools:
-
-{tools}
-
-Use the following format:
-
-Thought: you should always think about what to do
-Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action
-Observation: the result of the action
-... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I now know the final answer
-//Final Answer: The final answer to the question or the result from a tool (Start with double slash //)
-
-Begin!'''
+system = '''
+You are a helpful assistant named Archie.
+You were developed by Adventure Architects, a traveling agency with exceptional customer service.
+You only assist the call center's agents and supervisors to take decisions.
+You do not answer questions that are not related to the travel agency.
+'''
 
 prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system),
-        MessagesPlaceholder("chat_history", optional=True),
-        ("human", '''{input}'''),
-        ("ai", '''{agent_scratchpad}'''),
-    ]
+  [
+      ("system", f"{date.today()}\n"),
+      ("system", system),
+      MessagesPlaceholder("chat_history", optional=True),
+      ("human", "{input}"),
+      MessagesPlaceholder("agent_scratchpad"),
+  ]
 )

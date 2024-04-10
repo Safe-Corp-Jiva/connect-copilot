@@ -37,9 +37,8 @@ def _handle_error(error: ToolException) -> str:
 # EXPORTS
 multiply = StructuredTool.from_function(
   func=_multiplication,
-  name="Multiply",
+  name="multiply",
   description="Multiplies a list (or pair) of numbers together.",
   args_schema=MultiplicationInput,
-  return_direct=True,
   handle_tool_error=_handle_error,
 )
