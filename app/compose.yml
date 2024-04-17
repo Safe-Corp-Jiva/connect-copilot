@@ -1,9 +1,9 @@
 services:
   langchain:
-    image: "connect/copilot"
+    image: "stream/copilot"
     ports:
       - "8080:8080"
     volumes:
-      - .:/var/task
+      - .:/app:ro
     env_file:
       - .env
