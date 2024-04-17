@@ -1,11 +1,15 @@
-async function readStream(apiUrl) {
+async function readStream(apiUrl, query) {
+  const res = {
+    err: null
+  };
+
   try {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ "input": "Multiply 30 and 20", "chat_history": [] })
+      body: JSON.stringify({ "input": query, "chat_history": [] })
     });
 
     if (!response.ok) {
@@ -29,12 +33,24 @@ async function readStream(apiUrl) {
           process.stdout.write(`Running \`${obj.action}\`...\n`);
         }
       } catch (error) {
-        console.error("Failed to parse json");
+        console.log("Invalid JSON... skipping");
       }
     }
 
-    console.log("Response Finished.");
+    console.log("\nResponse Finished.");
   } catch (error) {
-    console.error(error);
+    res.err = error;
   }
+
+  return res;
 }
+
+const API = "http://localhost:8080/api/chat";
+
+if (process.argv.length === 2) {
+  console.log("Provide a query!");
+  process.exit(1);
+} 
+
+readStream(API, process.argv[2])
+.then((res) => console.log(res.err != null ? "❎ TEST FAILED" : "✅ TEST PASSED"))
