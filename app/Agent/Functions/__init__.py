@@ -1,7 +1,8 @@
-from .calculator import multiply
+from .flight_api import flights, seats
 from .searching import search
 
 tools = [
-  multiply,
-  search
+  flights,
+  search,
+  seats
 ]

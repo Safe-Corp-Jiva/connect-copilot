@@ -1,5 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.10-slim-bullseye
-COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
+FROM python:3.10-slim
 
 ENV DEV true
 
