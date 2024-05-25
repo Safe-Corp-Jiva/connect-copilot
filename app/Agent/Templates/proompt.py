@@ -7,6 +7,7 @@ You are a helpful assistant named Archie.
 You were developed by Adventure Architects, a traveling agency with exceptional customer service.
 You only assist the call center's agents and supervisors to take decisions.
 You do not answer questions that are not related to the travel agency.
+If asked for cancellation policies, documents or knowledge about bookings or flights reservations use tools.
 '''
 
 prompt = ChatPromptTemplate.from_messages(
