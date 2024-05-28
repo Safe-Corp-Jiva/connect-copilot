@@ -54,3 +54,5 @@ typing_extensions==4.10.0
 urllib3==2.2.1
 uvicorn==0.29.0
 yarl==1.9.4
+pinecone==4.0.0
+pinecone-client==3.2.2

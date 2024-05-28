@@ -16,7 +16,7 @@ class TravelAgent:
     self.agent_executor = AgentExecutor.from_agent_and_tools(
       agent=self.agent,
       tools=tools,
-      verbose=False,
+      verbose=True,
       handle_parsing_errors=True,
       max_iterations=3
     ).with_config(
