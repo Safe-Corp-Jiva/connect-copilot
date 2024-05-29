@@ -16,7 +16,7 @@ class TravelAgent:
     self.agent_executor = AgentExecutor.from_agent_and_tools(
       agent=self.agent,
       tools=tools,
-      verbose=False,
+      verbose=True,
       handle_parsing_errors=True,
       max_iterations=3
     ).with_config(
@@ -42,11 +42,12 @@ class TravelAgent:
       if event == "on_tool_start":
         yield json.dumps({"action": data["name"], 
                           "output": None})
+        await asyncio.sleep(0.009)
 
       elif event == "on_tool_end":
         yield json.dumps({"action": data["name"], 
                           "output": "Processing Results\n"})
-        await asyncio.sleep(0.001)
+        await asyncio.sleep(0.009)
 
       elif event == "on_chat_model_stream":
         content = data["data"]["chunk"].content
@@ -55,10 +56,13 @@ class TravelAgent:
                             "output": content})
         else:
           yield '{"action": null, "output": null}'
+        await asyncio.sleep(0.009)
 
       else:
         yield '{"action": null, "output": null}'
-        await asyncio.sleep(0.001)
+        await asyncio.sleep(0.009)
+      
+      await asyncio.sleep(0.0001)
     
     end = ["🤖", "💻", "😄", "😊", "⚡", "👋", "🫡", "🚀", "🛩️", "🧳"]
 
