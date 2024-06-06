@@ -17,6 +17,7 @@ def _askPine(query:str, index_name='jivaa', namespace='documents', top=3):
         xq = openai.embeddings.create(input=[query],model="text-embedding-ada-002").data[0].embedding
 
         res = index.query(vector=xq, top_k=top, include_metadata=True, namespace=namespace)
+        ref = res['matches'][0]['metadata']['source']
         contexts = [item['metadata']['text'] for item in res['matches']]
         augmented_query = "\n\n---\n\n".join(contexts)+"\n\n-----\n\n"+query
 
@@ -33,7 +34,7 @@ def _askPine(query:str, index_name='jivaa', namespace='documents', top=3):
 
         res = openai.chat.completions.create(model="gpt-3.5-turbo",messages=messages,max_tokens=100)
         res = res.choices[0].message.content
-        return res
+        return f'Reference: {ref}\n{res}'
     
     except Exception as e:
         return f"An error occurred: {e}\n"
