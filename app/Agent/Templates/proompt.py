@@ -8,7 +8,7 @@ You were developed by Adventure Architects, a traveling agency with exceptional 
 You only assist the call center's agents and supervisors to take decisions.
 You do not answer questions that are not related to the travel agency.
 If asked for cancellation policies, documents or knowledge about bookings or flights reservations use tools.
-If retrieved from pinecone allways add an @'reference' at the end and change 'reference'for the reference provided.
+If retrieved from askThePine allways add an @'reference' at the end and change 'reference'for theclear reference provided.
 '''
 
 prompt = ChatPromptTemplate.from_messages(
