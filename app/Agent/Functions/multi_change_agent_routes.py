@@ -1,4 +1,4 @@
-import boto3, openai
+import boto3, logging, openai, os
 
 from langchain.tools import StructuredTool
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -8,7 +8,17 @@ class MultiChangeAgentRoutesInput(BaseModel):
   """Input to change the routes of multiple agents"""
   query: str = Field(description="The origin and target routes to change the agents to and the number of agents.")
 
-client = boto3.client('connect')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION')
+
+if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY or not AWS_DEFAULT_REGION:
+  print('AWS credentials not found.')
+                                
+client = boto3.client('connect',
+                      region_name=AWS_DEFAULT_REGION,
+                      aws_access_key_id=AWS_ACCESS_KEY_ID,
+                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
 def get_routes(instance_id_local, connect_client=client):
     response = connect_client.list_routing_profiles(InstanceId=instance_id_local)
